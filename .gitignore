@@ -1,0 +1,4 @@
+# macOS file system redundant files
+.DS_Store
+._*
+
