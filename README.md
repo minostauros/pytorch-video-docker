@@ -5,7 +5,7 @@ Dockerfile for video AI researchers with pytorch
 
 ## Contains
 
- - Cuda
+ - Cuda + CuDNN
  - ffmpeg with cuda support
  - OpenCV with cuda and ffmpeg support
  - pytorch
