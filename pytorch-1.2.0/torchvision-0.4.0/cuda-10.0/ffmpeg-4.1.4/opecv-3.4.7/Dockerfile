@@ -523,6 +523,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # python packages for minostauros
 RUN pip3 install h5py munkres sklearn scikit-learn visdom youtube_dl
+RUN pip3 install matplotlib nibabel pypng moviepy Pillow
 
 # set python3 as default
 RUN rm -rf /usr/bin/python && ln -s /usr/bin/python3.5 /usr/bin/python
