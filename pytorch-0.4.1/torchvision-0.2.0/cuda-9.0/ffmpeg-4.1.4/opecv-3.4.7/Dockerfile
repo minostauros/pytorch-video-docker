@@ -7,7 +7,7 @@
 # opencv docker - https://github.com/Valian/docker-python-opencv-ffmpeg
 
 
-# Associated torchvision version will not be set automatically. Scroll down and set appropriate versions.
+# Associated pytorch version will not be set automatically. Scroll down and set appropriate versions.
 
 FROM    nvcr.io/nvidia/tensorflow:18.08-py3
 
@@ -507,6 +507,7 @@ RUN pip3 install matplotlib nibabel pypng moviepy Pillow
 # set python3 as default
 RUN rm -rf /usr/bin/python && ln -s /usr/bin/python3.5 /usr/bin/python
 
+ENTRYPOINT []
 CMD  ["/bin/bash"]
 ENV         LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 VOLUME ["/workspace"]

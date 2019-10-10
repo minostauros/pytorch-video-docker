@@ -9,9 +9,9 @@
 
 # Associated pytorch version will not be set automatically. Scroll down and set appropriate versions.
 
-FROM    nvcr.io/nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04 AS devel-base
+FROM    nvcr.io/nvidia/tensorflow:18.08-py3
 
-ENV	    NVIDIA_DRIVER_CAPABILITIES compat32,compute,video
+ENV	    NVIDIA_DRIVER_CAPABILITIES compute,video,utility
 WORKDIR     /tmp/workdir
 
 # change mirror
@@ -21,21 +21,6 @@ RUN     apt-get -yqq update && \
         apt-get install -yq --no-install-recommends apt-utils ca-certificates expat libgomp1 libxcb-shape0-dev && \
         apt-get autoremove -y && \
         apt-get clean -y
-
-FROM        nvcr.io/nvidia/cuda:9.0-cudnn7-runtime-ubuntu16.04 AS runtime-base
-
-ENV     NVIDIA_DRIVER_CAPABILITIES compat32,compute,video
-WORKDIR     /tmp/workdir
-
-# change mirror
-RUN sed -i.bak -re "s/([a-z]{2}.)?archive.ubuntu.com|security.ubuntu.com/mirror.kakao.com/g" /etc/apt/sources.list
-
-RUN     apt-get -yqq update && \
-        apt-get install -yq --no-install-recommends apt-utils ca-certificates expat libgomp1 libxcb-shape0-dev && \
-        apt-get autoremove -y && \
-        apt-get clean -y
-
-FROM  devel-base as build
 
 # Install FFMPEG
 
@@ -417,12 +402,6 @@ RUN \
         cp -r ${PREFIX}/share/ffmpeg /usr/local/share/ && \
         LD_LIBRARY_PATH=/usr/local/lib ffmpeg -buildconf
 
-FROM        runtime-base AS release
-
-COPY --from=build /usr/local/bin /usr/local/bin/
-COPY --from=build /usr/local/share /usr/local/share/
-COPY --from=build /usr/local/lib /usr/local/lib/
-
 # Install OpenCV
 
 ENV OPENCV_VERSION 3.4.7
@@ -525,10 +504,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip3 install h5py munkres sklearn scikit-learn scikit-image visdom youtube_dl 
 RUN pip3 install matplotlib nibabel pypng moviepy Pillow
 
-
 # set python3 as default
 RUN rm -rf /usr/bin/python && ln -s /usr/bin/python3.5 /usr/bin/python
 
+ENTRYPOINT []
 CMD  ["/bin/bash"]
 ENV         LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 VOLUME ["/workspace"]
