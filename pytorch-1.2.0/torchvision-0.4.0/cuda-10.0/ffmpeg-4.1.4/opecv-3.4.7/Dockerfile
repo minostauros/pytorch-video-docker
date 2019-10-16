@@ -507,10 +507,9 @@ RUN pip3 install matplotlib nibabel pypng moviepy Pillow
 # set python3 as default
 RUN rm -rf /usr/bin/python && ln -s /usr/bin/python3.5 /usr/bin/python
 
-RUN sed -i.bak -re "s/([a-z]{2}.)?TensorFlow/MINOSTAUROS/" \
+RUN sed -i.bak -e "s/== TensorFlow/== MINOSTAUROS/g" \
                -e "s/================/=================/g" \
                     /usr/local/bin/nvidia_entrypoint.sh
 CMD  ["/bin/bash"]
 ENV         LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
-VOLUME ["/workspace"]
 WORKDIR /workspace
