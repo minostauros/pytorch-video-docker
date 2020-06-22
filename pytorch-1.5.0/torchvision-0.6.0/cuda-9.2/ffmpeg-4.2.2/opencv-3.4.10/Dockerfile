@@ -30,7 +30,6 @@ RUN pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHV
         locales \
         tzdata \
         python${PYTHON_VERSION}-dev && \
-        apt-get autoremove -y && \
         apt-get clean -y && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
 # python packages for running FlowNet2.0 and install tensorflow
