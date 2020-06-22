@@ -16,7 +16,7 @@ ARG PYTHON_VERSION=3.7
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
 RUN pip${PYTHON_VERSION} install torch==1.5.0 torchvision==0.6.0 torchaudio==0.5.0 -f https://download.pytorch.org/whl/cu101/torch_stable.html && \
 # python packages for running FlowNet2.0 and install tensorflow
-RUN pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
+    pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # some apt packages
     apt-get update && apt-get install -y --no-install-recommends \
         rsync \
