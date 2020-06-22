@@ -12,21 +12,27 @@
 FROM    tigerdockermediocore/cuda-ffmpeg-opencv-docker:3.4.10-cu92-py37
 
 ARG PYTHON_VERSION=3.7
+ARG PYTORCH_VERSION=1.5.0
+ARG TORCHVISION_VERSION=0.6.0
+ARG TORCHAUDIO_VERSION=0.5.0
 
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
-RUN pip${PYTHON_VERSION} install torch==1.5.0 torchvision==0.6.0 torchaudio==0.5.0 -f https://download.pytorch.org/whl/cu101/torch_stable.html && \
+RUN pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHVISION_VERSION} torchaudio==${TORCHAUDIO_VERSION} -f https://download.pytorch.org/whl/cu101/torch_stable.html && \
 # some apt packages
-    apt-get update && apt-get install -y --no-install-recommends \
+    echo "Asia/Seoul" > /etc/timezone && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y --no-install-recommends \
         rsync \
         htop \
         openssh-server \
         libpng-dev \
-        software-properties-common \
-        python${PYTHON_VERSION}-dev \
-        swig && \
+        swig \
+        locales \
+        tzdata \
+        python${PYTHON_VERSION}-dev && \
         apt-get autoremove -y && \
         apt-get clean -y && \
-        rm -rf /var/lib/apt/lists/* && \
+        rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
 # python packages for running FlowNet2.0 and install tensorflow
     pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
@@ -34,11 +40,12 @@ RUN pip${PYTHON_VERSION} install torch==1.5.0 torchvision==0.6.0 torchaudio==0.5
                                  matplotlib nibabel pypng moviepy Pillow && \
 # Language & Timezone setting
     echo "Asia/Seoul" > /etc/timezone && \
-    dpkg-reconfigure -f noninteractive tzdata && \
+    DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true dpkg-reconfigure -f noninteractive tzdata && \
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     echo 'LANG="en_US.UTF-8"'>/etc/default/locale && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8
+    DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true dpkg-reconfigure --frontend=noninteractive locales && \
+    update-locale LANG=en_US.UTF-8 && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV LANG en_US.UTF-8 \
     LANGUAGE en_US.UTF-8 \
