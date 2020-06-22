@@ -15,8 +15,6 @@ ARG PYTHON_VERSION=3.7
 
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
 RUN pip${PYTHON_VERSION} install torch==1.5.0 torchvision==0.6.0 torchaudio==0.5.0 -f https://download.pytorch.org/whl/cu101/torch_stable.html && \
-# python packages for running FlowNet2.0 and install tensorflow
-    pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # some apt packages
     apt-get update && apt-get install -y --no-install-recommends \
         rsync \
@@ -24,10 +22,13 @@ RUN pip${PYTHON_VERSION} install torch==1.5.0 torchvision==0.6.0 torchaudio==0.5
         openssh-server \
         libpng-dev \
         software-properties-common \
+        python${PYTHON_VERSION}-dev \
         swig && \
         apt-get autoremove -y && \
         apt-get clean -y && \
         rm -rf /var/lib/apt/lists/* && \
+# python packages for running FlowNet2.0 and install tensorflow
+    pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install h5py munkres sklearn scikit-learn visdom youtube_dl \
                                  matplotlib nibabel pypng moviepy Pillow && \

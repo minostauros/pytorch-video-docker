@@ -24,6 +24,7 @@ RUN pip${PYTHON_VERSION} install torch==1.5.0 torchvision==0.6.0 torchaudio==0.5
         openssh-server \
         libpng-dev \
         software-properties-common \
+        python${PYTHON_VERSION}-dev \
         swig && \
         apt-get autoremove -y && \
         apt-get clean -y && \
