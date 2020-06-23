@@ -47,7 +47,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install h5py munkres sklearn scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache/pip/*
 
 ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" \
