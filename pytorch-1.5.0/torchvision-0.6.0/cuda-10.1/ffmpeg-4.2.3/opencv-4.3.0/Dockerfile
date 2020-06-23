@@ -16,10 +16,8 @@ ARG PYTORCH_VERSION=1.5.0
 ARG TORCHVISION_VERSION=0.6.0
 ARG TORCHAUDIO_VERSION=0.5.0
 
-# PyTorch (Mind cuda version and associated torch and torchvision versions)
-RUN pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHVISION_VERSION} torchaudio==${TORCHAUDIO_VERSION} -f https://download.pytorch.org/whl/cu101/torch_stable.html && \
 # some apt packages
-    echo "Asia/Seoul" > /etc/timezone && \
+RUN echo "Asia/Seoul" > /etc/timezone && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y --no-install-recommends \
         rsync \
@@ -32,11 +30,6 @@ RUN pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHV
         python${PYTHON_VERSION}-dev && \
         apt-get clean -y && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-# python packages for running FlowNet2.0 and install tensorflow
-    pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
-# python packages for minostauros
-    pip${PYTHON_VERSION} install h5py munkres sklearn scikit-learn visdom youtube_dl \
-                                 matplotlib nibabel pypng moviepy Pillow && \
 # Language & Timezone setting
     echo "Asia/Seoul" > /etc/timezone && \
     DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true dpkg-reconfigure -f noninteractive tzdata && \
@@ -44,12 +37,13 @@ RUN pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHV
     echo 'LANG="en_US.UTF-8"'>/etc/default/locale && \
     DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
+# PyTorch (Mind cuda version and associated torch and torchvision versions)
+    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHVISION_VERSION} torchaudio==${TORCHAUDIO_VERSION} -f https://download.pytorch.org/whl/cu101/torch_stable.html && \
+# python packages for running FlowNet2.0 and install tensorflow
+    pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
+# python packages for minostauros
+    pip${PYTHON_VERSION} install h5py munkres sklearn scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-ENV LANG="en_US.UTF-8" \
-    LANGUAGE="en_US.UTF-8" \
-    LC_ALL="en_US.UTF-8" \
-    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 
 CMD  ["/bin/bash"]
 WORKDIR /workspace
