@@ -22,6 +22,10 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y --no-install-recommends \
         rsync \
         htop \
+        tmux \
+        nano \
+        net-tools \
+        curl \
         openssh-server \
         libpng-dev \
         swig \
@@ -44,6 +48,10 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install h5py munkres sklearn scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENV LANG="en_US.UTF-8" \
+    LANGUAGE="en_US.UTF-8" \
+    LC_ALL="en_US.UTF-8"
 
 CMD  ["/bin/bash"]
 WORKDIR /workspace
