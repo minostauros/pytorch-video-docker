@@ -46,10 +46,10 @@ RUN pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHV
     update-locale LANG=en_US.UTF-8 && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV LANG en_US.UTF-8 \
-    LANGUAGE en_US.UTF-8 \
-    LC_ALL en_US.UTF-8 \
+ENV LANG="en_US.UTF-8" \
+    LANGUAGE="en_US.UTF-8" \
+    LC_ALL="en_US.UTF-8" \
     LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
-
+    
 CMD  ["/bin/bash"]
 WORKDIR /workspace
