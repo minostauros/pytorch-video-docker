@@ -16,6 +16,13 @@ ARG PYTORCH_VERSION=1.8.1
 ARG TORCHVISION_VERSION=0.9.1
 ARG TORCHAUDIO_VERSION=0.8.1
 
+# environmental variable for apex
+# https://en.wikipedia.org/wiki/CUDA#GPUs_supported
+# https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications
+# https://github.com/NVIDIA/apex/blob/d6b5ae5d04f531ff862f651e67f241fef88fd159/setup.py#L37
+# Kepler(partial) to Turing (3.5-7.5) with CUDA 10.1
+ENV TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;5.2;6.0;6.1;6.2;7.0;7.5
+
 # some apt packages
 RUN echo "Asia/Seoul" > /etc/timezone && \
     apt-get update && \
@@ -31,6 +38,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         swig \
         locales \
         tzdata \
+        ninja-build \
         python${PYTHON_VERSION}-dev && \
         apt-get clean -y && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
@@ -47,7 +55,20 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # python packages for running FlowNet2.0 and install tensorflow
     pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
-    pip${PYTHON_VERSION} install h5py munkres sklearn scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops && \
+    pip${PYTHON_VERSION} install h5py munkres sklearn scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo && \
+    pip${PYTHON_VERSION} install timm decord simplejson av psutil && \
+# nvidia apex
+    DIR=/tmp/apex && \
+    mkdir -p ${DIR} && \
+    cd ${DIR} && \
+    git clone https://github.com/NVIDIA/apex . && \
+    pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+    rm -rf ${DIR} && \
+    cd /tmp/ && \
+# detection related
+# detectron2 includes fvcore iopath hydra-core omegaconf yacs termcolor pycocotools
+    python${PYTHON_VERSION} -m pip install 'git+https://github.com/facebookresearch/detectron2.git' && \
+# remove pip cache
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache/pip/*
 
 ENV LANG="en_US.UTF-8" \
