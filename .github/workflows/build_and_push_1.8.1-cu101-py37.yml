@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'master'
+    paths:
+      - 'pytorch-1.8.1/torchvision-0.9.1/cuda-10.1/ffmpeg-4.2.3/opencv-4.3.0/Dockerfile'
 
 jobs:
   docker:
