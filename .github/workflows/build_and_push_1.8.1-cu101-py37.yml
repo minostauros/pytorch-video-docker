@@ -24,13 +24,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push Docker Hub
-        uses: docker/build-push-action@v2
-        with:
-          context: pytorch-1.8.1/torchvision-0.9.1/cuda-10.1/ffmpeg-4.2.3/opencv-4.3.0
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:1.8.1-cu101-py37   
       - 
         name: Login to GitHub Container Registry
         uses: docker/login-action@v1
@@ -38,11 +31,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GIT_PACKAGES_TOKEN }}
-      - 
-        name: Build and push Github Packages
+      -
+        name: Build and push Docker Hub
         uses: docker/build-push-action@v2
         with:
           context: pytorch-1.8.1/torchvision-0.9.1/cuda-10.1/ffmpeg-4.2.3/opencv-4.3.0
           push: true
           tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.repository.name }}:1.8.1-cu101-py37  
             ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}:1.8.1-cu101-py37
