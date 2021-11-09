@@ -31,6 +31,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         swig \
         locales \
         tzdata \
+        psmisc \
+        git-lfs \
         python${PYTHON_VERSION}-dev && \
         apt-get clean -y && \
         rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
