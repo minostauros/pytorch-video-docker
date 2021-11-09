@@ -11,7 +11,7 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
-    if: "join(fromJSON(github.event.inputs.path), '') != ''" # preoceed only when we have something to build
+#     if: "join(fromJSON(github.event.inputs.path), '') != ''" # preoceed only when we have something to build
     steps:
       -
         name: Checkout
