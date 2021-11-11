@@ -1,5 +1,5 @@
 # pytorch-video-docker
-[![Docker Automated build](https://img.shields.io/docker/cloud/automated/tigerdockermediocore/pytorch-video-docker)](https://hub.docker.com/r/tigerdockermediocore/pytorch-video-docker) 
+[![Docker Automated Build](https://img.shields.io/docker/cloud/automated/tigerdockermediocore/pytorch-video-docker)](https://hub.docker.com/r/tigerdockermediocore/pytorch-video-docker) [![Github Actions Automated Build](https://github.com/minostauros/pytorch-video-docker/actions/workflows/manual_build.yml/badge.svg)](https://github.com/minostauros/pytorch-video-docker/pkgs/container/pytorch-video-docker)
 
 Dockerfile for video AI researchers with pytorch
 
