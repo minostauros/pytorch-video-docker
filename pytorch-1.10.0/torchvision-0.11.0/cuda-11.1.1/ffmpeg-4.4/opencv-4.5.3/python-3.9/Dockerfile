@@ -28,6 +28,9 @@ ENV TZ=Asia/Seoul
 RUN echo "Asia/Seoul" > /etc/timezone && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y --no-install-recommends \
+        cmake \
+        libncurses5-dev \
+        libncursesw5-dev \
         rsync \
         htop \
         tmux \
@@ -44,7 +47,6 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         ninja-build \
         python${PYTHON_VERSION}-dev && \
         apt-get clean -y && \
-        rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
 # Language & Timezone setting
     echo "Asia/Seoul" > /etc/timezone && \
     ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime && \
@@ -69,10 +71,29 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
     rm -rf ${DIR} && \
     cd /tmp/ && \
+# nvtop
+    DIR=/tmp/nvtop && \
+    mkdir -p ${DIR} && \
+    cd ${DIR} && \
+    git clone https://github.com/Syllo/nvtop.git . && \
+    mkdir -p build && \
+    cd build && \
+    cmake .. && \
+    make && \
+    make install && \
+    rm -rf ${DIR} && \
+    cd /tmp/ && \
 # detection related
 # detectron2 includes fvcore iopath hydra-core omegaconf yacs termcolor pycocotools
     python${PYTHON_VERSION} -m pip install 'git+https://github.com/facebookresearch/detectron2.git' && \
-# remove pip cache
+    pip${PYTHON_VERSION} install motmetrics && \
+# remove futile apt packages and pip cache
+   apt-get -y remove \
+        libncurses5-dev \
+        libncursesw5-dev \
+    && \
+    apt-get autoremove -y && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache/pip/*
 
 
