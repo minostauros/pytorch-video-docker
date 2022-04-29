@@ -9,7 +9,7 @@
 
 # Associated pytorch version will not be set automatically. Scroll down and set appropriate versions.
 
-FROM    tigerdockermediocore/cuda-ffmpeg-opencv-docker:4.5.3-cu111-py39
+FROM    ghcr.io/minostauros/cuda-ffmpeg-opencv-docker:4.5.3-cu111-py39
 
 ARG PYTHON_VERSION=3.9
 ARG PYTORCH_VERSION=1.9.0
