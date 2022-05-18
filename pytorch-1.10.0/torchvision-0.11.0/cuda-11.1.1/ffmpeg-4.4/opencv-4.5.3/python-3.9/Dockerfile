@@ -87,6 +87,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # detectron2 includes fvcore iopath hydra-core omegaconf yacs termcolor pycocotools
     python${PYTHON_VERSION} -m pip install 'git+https://github.com/facebookresearch/detectron2.git' && \
     pip${PYTHON_VERSION} install motmetrics && \
+# pytorch 1.9.x 1.10.x prebuilt known bug: https://github.com/pytorch/pytorch/pull/69904
+    pip${PYTHON_VERSION} install setuptools==59.5.0 && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
