@@ -81,10 +81,15 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     make install && \
     rm -rf ${DIR} && \
     cd /tmp/ && \
+# codeserver (VSCode)
+    curl -fsSL https://code-server.dev/install.sh | sh && \
+# starship
+    sh -c "$(curl -fsSL https://starship.rs/install.sh)" -- -y && \
+    echo -e "\n# starship\neval \"\$(starship init bash)\"\n" >> ~/.bashrc && \
 # detection related
 # detectron2 includes fvcore iopath hydra-core omegaconf yacs termcolor pycocotools
     python${PYTHON_VERSION} -m pip install 'git+https://github.com/facebookresearch/detectron2.git' && \
-    pip${PYTHON_VERSION} install motmetrics && \
+    pip${PYTHON_VERSION} install motmetrics easydict && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
