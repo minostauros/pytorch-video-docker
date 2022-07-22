@@ -57,7 +57,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     update-locale LANG=en_US.UTF-8 && \
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
     python${PYTHON_VERSION} -m pip install --upgrade pip && \
-    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHVISION_VERSION} torchaudio==${TORCHAUDIO_VERSION} -f https://download.pytorch.org/whl/cu111/torch_stable.html && \
+    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION}+cu111 torchvision==${TORCHVISION_VERSION}+cu111 torchaudio==${TORCHAUDIO_VERSION} --extra-index-url https://download.pytorch.org/whl/cu111 && \
 # python packages for running FlowNet2.0 and install tensorboard
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
