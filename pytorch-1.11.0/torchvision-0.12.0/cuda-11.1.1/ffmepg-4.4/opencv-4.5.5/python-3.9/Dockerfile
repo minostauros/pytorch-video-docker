@@ -9,12 +9,13 @@
 
 # Associated pytorch version will not be set automatically. Scroll down and set appropriate versions.
 
-FROM    ghcr.io/minostauros/cuda-ffmpeg-opencv-docker:4.5.5-cu111-py39
+FROM    ghcr.io/minostauros/cuda-ffmpeg-opencv-docker:4.6.0-cu113-py39
 
 ARG PYTHON_VERSION=3.9
 ARG PYTORCH_VERSION=1.11.0
 ARG TORCHVISION_VERSION=0.12.0
 ARG TORCHAUDIO_VERSION=0.11.0
+ARG TARGET_CUDA_VERSION=cu113
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -57,7 +58,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     update-locale LANG=en_US.UTF-8 && \
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
     python${PYTHON_VERSION} -m pip install --upgrade pip && \
-    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION}+cu111 torchvision==${TORCHVISION_VERSION}+cu111 torchaudio==${TORCHAUDIO_VERSION} --extra-index-url https://download.pytorch.org/whl/cu111 && \
+    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION}+${TARGET_CUDA_VERSION} torchvision==${TORCHVISION_VERSION}+cu${TARGET_CUDA_VERSION} torchaudio==${TORCHAUDIO_VERSION} --extra-index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
 # python packages for running FlowNet2.0 and install tensorboard
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
