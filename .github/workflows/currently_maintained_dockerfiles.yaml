@@ -1,4 +1,4 @@
-name: Build specified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 Dockerfiles
+name: Build specified Dockerfiles
 
 on: workflow_dispatch
 
