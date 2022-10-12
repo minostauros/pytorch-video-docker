@@ -69,7 +69,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     mkdir -p ${DIR} && \
     cd ${DIR} && \
     git clone https://github.com/minostauros/apex . && \
-    pip install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+    pip${PYTHON_VERSION} install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
     rm -rf ${DIR} && \
     cd /tmp/ && \
 # nvtop
