@@ -46,6 +46,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         psmisc \
         git-lfs \
         ninja-build \
+        rclone \
         python${PYTHON_VERSION}-dev && \
         apt-get clean -y && \
 # Language & Timezone setting
@@ -93,6 +94,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # detectron2 includes fvcore iopath hydra-core omegaconf yacs termcolor pycocotools
     python${PYTHON_VERSION} -m pip install 'git+https://github.com/facebookresearch/detectron2.git' && \
     pip${PYTHON_VERSION} install motmetrics easydict && \
+# Neural Rendering related
+    pip${PYTHON_VERSION} install configargparse lpips && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \

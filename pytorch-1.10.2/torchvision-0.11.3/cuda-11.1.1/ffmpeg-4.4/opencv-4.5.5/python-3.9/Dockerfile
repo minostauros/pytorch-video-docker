@@ -45,6 +45,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         psmisc \
         git-lfs \
         ninja-build \
+        rclone \
         python${PYTHON_VERSION}-dev && \
         apt-get clean -y && \
 # Language & Timezone setting
@@ -94,6 +95,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install motmetrics easydict && \
 # pytorch 1.9.x 1.10.x prebuilt known bug: https://github.com/pytorch/pytorch/pull/69904
     pip${PYTHON_VERSION} install setuptools==59.5.0 && \
+# Neural Rendering related
+    pip${PYTHON_VERSION} install configargparse lpips && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
