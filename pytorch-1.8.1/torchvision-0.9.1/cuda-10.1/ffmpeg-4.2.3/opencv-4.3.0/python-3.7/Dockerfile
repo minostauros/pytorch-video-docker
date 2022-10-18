@@ -45,6 +45,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         git-lfs \
         ninja-build \
         rclone \
+        libdrm-dev libsystemd-dev libudev-dev \
         python${PYTHON_VERSION}-dev && \
         apt-get clean -y && \
 # Language & Timezone setting
