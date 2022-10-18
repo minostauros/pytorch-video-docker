@@ -107,7 +107,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 
 ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" \
-    LC_ALL="en_US.UTF-8"
+    LC_ALL="en_US.UTF-8" \
+    PYTHONPATH="$PYTHONPATH:/usr/lib/python${PYTHON_VERSION}/site-packages"
 
 CMD  ["/bin/bash"]
 WORKDIR /workspace
