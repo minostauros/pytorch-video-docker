@@ -16,6 +16,7 @@ ARG PYTORCH_VERSION=1.11.0
 ARG TORCHVISION_VERSION=0.12.0
 ARG TORCHAUDIO_VERSION=0.11.0
 ARG TARGET_CUDA_VERSION=cu113
+ARG CUDA_VERSION=11.3
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -110,9 +111,9 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8" \
-    PATH="/usr/local/cuda-11.3/bin:${PATH}" \
-    LD_LIBRARY_PATH="/usr/local/cuda-11.3/lib64:${LD_LIBRARY_PATH}" \
-    PYTHONPATH="$PYTHONPATH:/usr/lib/python${PYTHON_VERSION}/site-packages"
+    PATH="/usr/local/cuda-${CUDA_VERSION}/bin:${PATH}" \
+    LD_LIBRARY_PATH="/usr/local/cuda-${CUDA_VERSION}/lib64:${LD_LIBRARY_PATH}" \
+    PYTHONPATH="$PYTHONPATH:/usr/lib/python${PYTHON_VERSION}/site-packages:/usr/local/lib/python${PYTHON_VERSION}/site-packages"
 
 CMD  ["/bin/bash"]
 WORKDIR /workspace
