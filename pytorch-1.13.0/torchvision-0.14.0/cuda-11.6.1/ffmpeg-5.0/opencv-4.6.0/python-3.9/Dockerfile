@@ -23,7 +23,7 @@ ARG CUDA_VERSION=11.6
 # https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications
 # https://github.com/NVIDIA/apex/blob/d6b5ae5d04f531ff862f651e67f241fef88fd159/setup.py#L37
 # Kepler(partial) to Ampere (6.0-8.6) with CUDA 11.1.1
-ENV TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;5.2;6.0;6.1;6.2;7.0;7.5;8.0;8.6;8.7
+ENV TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;5.2;6.0;6.1;6.2;7.0;7.5;8.0;8.6
 ENV TZ=Asia/Seoul
 
 # some apt packages
@@ -61,7 +61,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     update-locale LANG=en_US.UTF-8 && \
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
     python${PYTHON_VERSION} -m pip install --upgrade pip && \
-    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION}+${TARGET_CUDA_VERSION} torchvision==${TORCHVISION_VERSION}+${TARGET_CUDA_VERSION} torchaudio==${TORCHAUDIO_VERSION} --extra-index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
+    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION}+${TARGET_CUDA_VERSION} torchvision==${TORCHVISION_VERSION}+${TARGET_CUDA_VERSION} torchaudio==${TORCHAUDIO_VERSION}+${TARGET_CUDA_VERSION} --extra-index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
 # python packages for running FlowNet2.0 and install tensorboard
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
