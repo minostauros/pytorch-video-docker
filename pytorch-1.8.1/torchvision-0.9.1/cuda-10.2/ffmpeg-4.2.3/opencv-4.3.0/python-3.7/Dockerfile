@@ -15,6 +15,8 @@ ARG PYTHON_VERSION=3.7
 ARG PYTORCH_VERSION=1.8.1
 ARG TORCHVISION_VERSION=0.9.1
 ARG TORCHAUDIO_VERSION=0.8.1
+ARG TARGET_CUDA_VERSION=cu102
+ARG CUDA_VERSION=10.2
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -57,7 +59,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     update-locale LANG=en_US.UTF-8 && \
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
     python${PYTHON_VERSION} -m pip install --upgrade pip && \
-    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHVISION_VERSION} torchaudio==${TORCHAUDIO_VERSION} -f https://download.pytorch.org/whl/cu102/torch_stable.html && \
+    pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION} torchvision==${TORCHVISION_VERSION} torchaudio==${TORCHAUDIO_VERSION} -f https://download.pytorch.org/whl/${TARGET_CUDA_VERSION}/torch_stable.html && \
 # python packages for running FlowNet2.0 and install tensorflow
     pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
@@ -94,6 +96,9 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install motmetrics easydict && \
 # Neural Rendering related
     pip${PYTHON_VERSION} install configargparse lpips && \
+# Huggingface (pytorch >= 1.13.0 for bettertransformer)
+    pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
+        optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
@@ -106,7 +111,9 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8" \
-    PYTHONPATH="$PYTHONPATH:/usr/lib/python${PYTHON_VERSION}/site-packages"
+    PATH="/usr/local/cuda-${CUDA_VERSION}/bin:${PATH}" \
+    LD_LIBRARY_PATH="/usr/local/cuda-${CUDA_VERSION}/lib64:${LD_LIBRARY_PATH}" \
+    PYTHONPATH="$PYTHONPATH:/usr/lib/python${PYTHON_VERSION}/site-packages:/usr/local/lib/python${PYTHON_VERSION}/site-packages"
 
 CMD  ["/bin/bash"]
 WORKDIR /workspace

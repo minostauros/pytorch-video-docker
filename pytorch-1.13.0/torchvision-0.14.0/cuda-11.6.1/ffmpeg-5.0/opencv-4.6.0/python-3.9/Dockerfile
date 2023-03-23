@@ -99,7 +99,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Neural Rendering related
     pip${PYTHON_VERSION} install configargparse lpips && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
-    pip${PYTHON_VERSION} install transformers datasets accelerate optimum && \
+    pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
+        optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
