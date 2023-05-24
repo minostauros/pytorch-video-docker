@@ -63,7 +63,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # python packages for running FlowNet2.0 and install tensorboard
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
-    pip${PYTHON_VERSION} install h5py munkres sklearn scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo && \
+    pip${PYTHON_VERSION} install h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo && \
     pip${PYTHON_VERSION} install timm decord simplejson av psutil && \
 # nvidia apex
     DIR=/tmp/apex && \
