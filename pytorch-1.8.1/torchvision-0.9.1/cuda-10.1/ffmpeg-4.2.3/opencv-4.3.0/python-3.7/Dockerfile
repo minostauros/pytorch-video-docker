@@ -64,7 +64,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install cffi tensorboardX tensorflow tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo && \
-    pip${PYTHON_VERSION} install timm decord simplejson av psutil && \
+    pip${PYTHON_VERSION} install timm decord simplejson av psutil fire fairscale && \
 # nvidia apex
     DIR=/tmp/apex && \
     mkdir -p ${DIR} && \
