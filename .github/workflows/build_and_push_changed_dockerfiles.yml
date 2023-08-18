@@ -47,6 +47,9 @@ jobs:
         files: ${{fromJSON(needs.provide_changed_files.outputs.matrix)}}
     steps:
       -
+        name: Create more disk space
+        run: sudo rm -rf /usr/share/dotnet && sudo rm -rf /opt/ghc && sudo rm -rf "/usr/local/share/boost" && sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+      -
         name: Checkout
         uses: actions/checkout@v3
 #       -
