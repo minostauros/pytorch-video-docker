@@ -27,8 +27,6 @@ ENV TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;5.2;6.0;6.1;6.2;7.0;7.5
 
 # some apt packages
 RUN echo "Asia/Seoul" > /etc/timezone && \
-    # nvidia package size mismatch https://forums.developer.nvidia.com/t/failed-to-fetch-https-developer-download-nvidia-com-compute-machine-learning-repos-ubuntu1804-x86-64-packages-gz/156287
-    rm -f /etc/apt/sources.list.d/cuda.list && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y --no-install-recommends \
         cmake \
