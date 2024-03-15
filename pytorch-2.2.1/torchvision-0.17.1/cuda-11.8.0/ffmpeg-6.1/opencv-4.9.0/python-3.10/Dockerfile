@@ -102,9 +102,9 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
         onnx onnxruntime peft && \
-# attention accelerations
+# attention accelerations, build xformers from source as wheel is not available for torch 2.2.1
     pip${PYTHON_VERSION} install flash-attn --no-build-isolation && \
-    pip${PYTHON_VERSION} install -U xformers --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
+    pip${PYTHON_VERSION} install -v -U git+https://github.com/facebookresearch/xformers.git@main#egg=xformers && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \

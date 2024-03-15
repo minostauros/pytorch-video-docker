@@ -60,7 +60,7 @@ jobs:
           haskell: false
           large-packages: false
           docker-images: false
-          swap-storage: false
+          swap-storage: true
       -
         name: Checkout
         uses: actions/checkout@v4
