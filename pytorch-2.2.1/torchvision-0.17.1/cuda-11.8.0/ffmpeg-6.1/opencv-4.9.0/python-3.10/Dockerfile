@@ -15,6 +15,7 @@ ARG PYTHON_VERSION=3.10
 ARG PYTORCH_VERSION=2.2.1
 ARG TORCHVISION_VERSION=0.17.1
 ARG TORCHAUDIO_VERSION=2.2.1
+ARG XFORMERS_VERSION=0.0.25
 ARG TARGET_CUDA_VERSION=cu118
 ARG CUDA_VERSION=11.8
 
@@ -102,9 +103,9 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
         onnx onnxruntime peft && \
-# attention accelerations, build xformers from source as wheel is not available for torch 2.2.1
+# attention accelerations
     pip${PYTHON_VERSION} install flash-attn --no-build-isolation && \
-    pip${PYTHON_VERSION} install -v -U git+https://github.com/facebookresearch/xformers.git@main#egg=xformers && \
+    pip${PYTHON_VERSION} install xformers==${XFORMERS_VERSION}+${TARGET_CUDA_VERSION} --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
