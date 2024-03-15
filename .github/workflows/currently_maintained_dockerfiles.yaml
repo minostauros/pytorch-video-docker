@@ -21,14 +21,29 @@ jobs:
           - "pytorch-1.8.1/torchvision-0.9.1/cuda-9.2/ffmpeg-4.2.2/opencv-3.4.10/Dockerfile"
     steps:
       -
+        name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: false
+          large-packages: false
+          docker-images: false
+          swap-storage: false
+      -
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 #       -
 #         name: Set up QEMU
 #         uses: docker/setup-qemu-action@v2
       -
         name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       -
         name: Get path and create tag
         id: dockerfile
@@ -40,20 +55,20 @@ jobs:
           echo "tag=${tag}${py_ver}" >> $GITHUB_OUTPUT;
       -
         name: Login to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GIT_PACKAGES_TOKEN }}
       -
         name: Build and push Docker Hub
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ${{ steps.dockerfile.outputs.path }}
