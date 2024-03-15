@@ -72,7 +72,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     mkdir -p ${DIR} && \
     cd ${DIR} && \
     git clone https://github.com/minostauros/apex . && \
-    pip${PYTHON_VERSION} install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+    pip${PYTHON_VERSION} install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
     rm -rf ${DIR} && \
     cd /tmp/ && \
 # nvtop
@@ -103,7 +103,6 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
         onnx onnxruntime peft && \
 # attention accelerations
-    pip${PYTHON_VERSION} install packaging && \
     pip${PYTHON_VERSION} install flash-attn --no-build-isolation && \
     pip${PYTHON_VERSION} install -U xformers --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
 # remove futile apt packages and pip cache
