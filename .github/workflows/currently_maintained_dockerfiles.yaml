@@ -14,16 +14,6 @@ jobs:
           - "pytorch-2.1.2/torchvision-0.16.2/cuda-11.8.0/ffmpeg-6.1/opencv-4.9.0/python-3.10/Dockerfile"
           - "pytorch-2.0.0/torchvision-0.15.1/cuda-11.7.1/ffmpeg-6.0/opencv-4.7.0/python-3.9/Dockerfile"
           - "pytorch-1.13.0/torchvision-0.14.0/cuda-11.6.1/ffmpeg-5.0/opencv-4.6.0/python-3.9/Dockerfile"
-          - "pytorch-1.12.0/torchvision-0.13.0/cuda-11.3.1/ffmpeg-5.0/opencv-4.6.0/python-3.9/Dockerfile"
-          - "pytorch-1.11.0/torchvision-0.12.0/cuda-11.3.1/ffmepg-4.4/opencv-4.5.5/python-3.9/Dockerfile"
-          - "pytorch-1.10.2/torchvision-0.11.3/cuda-11.1.1/ffmpeg-4.4/opencv-4.5.5/python-3.9/Dockerfile"
-          - "pytorch-1.10.0/torchvision-0.11.0/cuda-11.1.1/ffmpeg-4.4/opencv-4.5.3/python-3.9/Dockerfile"
-          - "pytorch-1.10.0/torchvision-0.11.0/cuda-10.2/ffmpeg-4.2.3/opencv-4.3.0/python-3.7/Dockerfile"
-          - "pytorch-1.9.0/torchvision-0.10.0/cuda-11.1.1/ffmpeg-4.4/opencv-4.5.3/python-3.9/Dockerfile"
-          - "pytorch-1.9.0/torchvision-0.10.0/cuda-10.2/ffmpeg-4.2.3/opencv-4.3.0/python-3.7/Dockerfile"
-          - "pytorch-1.8.1/torchvision-0.9.1/cuda-10.2/ffmpeg-4.2.3/opencv-4.3.0/python-3.7/Dockerfile"
-          - "pytorch-1.8.1/torchvision-0.9.1/cuda-10.1/ffmpeg-4.2.3/opencv-4.3.0/python-3.7/Dockerfile"
-          - "pytorch-1.8.1/torchvision-0.9.1/cuda-9.2/ffmpeg-4.2.2/opencv-3.4.10/Dockerfile"
     steps:
       -
         name: Free Disk Space (Ubuntu)

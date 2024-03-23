@@ -18,6 +18,8 @@ ARG TORCHAUDIO_VERSION=2.1.2
 ARG XFORMERS_VERSION=0.0.23.post1
 ARG TARGET_CUDA_VERSION=cu121
 ARG CUDA_VERSION=12.1
+# TensorRT for cuda12.0 supports cuda12.x
+ARG TENSORRT_VERSION="8.6.1.6-1+cuda12.0"
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -102,10 +104,17 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
-        onnx onnxruntime peft && \
+        onnx onnxsim onnxruntime onnxruntime-gpu peft && \
 # attention accelerations
     pip${PYTHON_VERSION} install flash-attn --no-build-isolation && \
     pip${PYTHON_VERSION} install xformers==${XFORMERS_VERSION} --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
+# TensorRT libraries
+    apt list -a libnvinfer8 && \
+    apt-get install -y libnvinfer8=${TENSORRT_VERSION} libnvinfer-plugin8=${TENSORRT_VERSION} \
+        libnvinfer-dev=${TENSORRT_VERSION} libnvinfer-plugin-dev=${TENSORRT_VERSION} \
+        libnvonnxparsers8=${TENSORRT_VERSION} libnvonnxparsers-dev=${TENSORRT_VERSION} \
+        libnvparsers8=${TENSORRT_VERSION}  libnvparsers-dev=${TENSORRT_VERSION} \
+        libnvinfer-headers-dev=${TENSORRT_VERSION} libnvinfer-headers-plugin-dev=${TENSORRT_VERSION} && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \

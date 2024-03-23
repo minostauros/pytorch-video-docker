@@ -17,20 +17,22 @@ ARG TORCHVISION_VERSION=0.15.1
 ARG TORCHAUDIO_VERSION=2.0.1
 ARG TARGET_CUDA_VERSION=cu117
 ARG CUDA_VERSION=11.7
+# TensorRT for cuda11.8 supports cuda11.x
+ARG TENSORRT_VERSION="8.6.1.6-1+cuda11.8"
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
 # https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#features-and-technical-specifications
 # https://github.com/NVIDIA/apex/blob/d6b5ae5d04f531ff862f651e67f241fef88fd159/setup.py#L37
-# Kepler(partial) to Ampere (6.0-8.6) with CUDA 11.1.1
-ENV TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;5.2;6.0;6.1;6.2;7.0;7.5;8.0;8.6
+# Kepler(Late) to Ampere (3.5-8.7) with CUDA 11.7.1
+ENV TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;5.2;6.0;6.1;6.2;7.0;7.5;8.0;8.6;8.7
 ENV TZ=Asia/Seoul
 
 # some apt packages
 RUN echo "Asia/Seoul" > /etc/timezone && \
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true apt-get install -y --no-install-recommends \
-        cmake \
+        bc \
         libncurses5-dev \
         libncursesw5-dev \
         rsync \
@@ -59,6 +61,21 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     echo 'LANG="en_US.UTF-8"'>/etc/default/locale && \
     DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
+# CMake higher version than apt-get
+    DIR=/opt/cmake && \
+    mkdir -p ${DIR} && \
+    cd ${DIR} && \
+    CMAKE_VERSION=3.18 && \
+    CMKAE_BUILD=0 && \
+    CMAKE_LIMIT=3.20 && \
+    result=$(echo "${CMAKE_VERSION} >= ${CMAKE_LIMIT}" | bc -l) && \
+    os=$([ "$result" == 1 ] && echo "linux" || echo "Linux") && \
+    wget -nc https://cmake.org/files/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}.${CMKAE_BUILD}-$os-x86_64.sh  && \
+    sh cmake-${CMAKE_VERSION}.${CMKAE_BUILD}-$os-x86_64.sh --prefix=${DIR} --skip-license --exclude-subdir && \
+    ln -s ${DIR}/bin/cmake /usr/local/bin/cmake && \
+    cmake --version && \
+    rm -rf cmake-${CMAKE_VERSION}.${CMKAE_BUILD}-$os-x86_64.sh && \
+    cd /tmp/ && \
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
     python${PYTHON_VERSION} -m pip install --upgrade pip && \
     pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION}+${TARGET_CUDA_VERSION} torchvision==${TORCHVISION_VERSION}+${TARGET_CUDA_VERSION} torchaudio==${TORCHAUDIO_VERSION}+${TARGET_CUDA_VERSION} --extra-index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
@@ -66,13 +83,13 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo && \
-    pip${PYTHON_VERSION} install timm decord simplejson av psutil fire fairscale && \
+    pip${PYTHON_VERSION} install timm decord simplejson av psutil fire fairscale ftfy && \
 # nvidia apex
     DIR=/tmp/apex && \
     mkdir -p ${DIR} && \
     cd ${DIR} && \
     git clone https://github.com/minostauros/apex . && \
-    pip${PYTHON_VERSION} install -v --disable-pip-version-check --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
+    pip${PYTHON_VERSION} install -v --disable-pip-version-check --no-cache-dir --no-build-isolation --global-option="--cpp_ext" --global-option="--cuda_ext" ./ && \
     rm -rf ${DIR} && \
     cd /tmp/ && \
 # nvtop
@@ -101,7 +118,16 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
-        onnx onnxruntime peft && \
+        onnx onnxsim onnxruntime onnxruntime-gpu peft && \
+# attention accelerations
+    pip${PYTHON_VERSION} install flash-attn --no-build-isolation && \
+# TensorRT libraries
+    apt list -a libnvinfer8 && \
+    apt-get install -y libnvinfer8=${TENSORRT_VERSION} libnvinfer-plugin8=${TENSORRT_VERSION} \
+        libnvinfer-dev=${TENSORRT_VERSION} libnvinfer-plugin-dev=${TENSORRT_VERSION} \
+        libnvonnxparsers8=${TENSORRT_VERSION} libnvonnxparsers-dev=${TENSORRT_VERSION} \
+        libnvparsers8=${TENSORRT_VERSION}  libnvparsers-dev=${TENSORRT_VERSION} \
+        libnvinfer-headers-dev=${TENSORRT_VERSION} libnvinfer-headers-plugin-dev=${TENSORRT_VERSION} && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
