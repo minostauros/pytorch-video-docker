@@ -20,6 +20,7 @@ ARG TARGET_CUDA_VERSION=cu118
 ARG CUDA_VERSION=11.8
 # TensorRT for cuda11.8 supports cuda11.x
 ARG TENSORRT_VERSION="8.6.1.6-1+cuda11.8"
+ARG ONNXRUNTIME_VERSION=1.15.1
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -27,6 +28,7 @@ ARG TENSORRT_VERSION="8.6.1.6-1+cuda11.8"
 # https://github.com/NVIDIA/apex/blob/d6b5ae5d04f531ff862f651e67f241fef88fd159/setup.py#L37
 # Kepler(Late) to Hopper (3.5-9.0) with CUDA 11.8.0
 ENV TORCH_CUDA_ARCH_LIST=3.5;3.7;5.0;5.2;6.0;6.1;6.2;7.0;7.5;8.0;8.6;8.7;8.9;9.0
+ENV CMAKE_CUDA_ARCHITECTURES=35;37;50;52;60;61;62;70;75;80;86;87;89;90
 ENV TZ=Asia/Seoul
 
 # some apt packages
@@ -65,6 +67,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
     python${PYTHON_VERSION} -m pip install --upgrade pip && \
     pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION}+${TARGET_CUDA_VERSION} torchvision==${TORCHVISION_VERSION}+${TARGET_CUDA_VERSION} torchaudio==${TORCHAUDIO_VERSION}+${TARGET_CUDA_VERSION} --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
+# CMake higher version than apt-get
+    pip${PYTHON_VERSION} install cmake packaging && \
 # python packages for running FlowNet2.0 and install tensorboard
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
@@ -104,17 +108,42 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
-        onnx onnxsim onnxruntime onnxruntime-gpu peft && \
+        onnx onnxsim peft && \
 # attention accelerations
     pip${PYTHON_VERSION} install flash-attn --no-build-isolation && \
     pip${PYTHON_VERSION} install xformers==${XFORMERS_VERSION}+${TARGET_CUDA_VERSION} --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
-# TensorRT libraries
+# TensorRT libraries & onnxruntime with tensorrt
     apt list -a libnvinfer8 && \
     apt-get install -y libnvinfer8=${TENSORRT_VERSION} libnvinfer-plugin8=${TENSORRT_VERSION} \
         libnvinfer-dev=${TENSORRT_VERSION} libnvinfer-plugin-dev=${TENSORRT_VERSION} \
         libnvonnxparsers8=${TENSORRT_VERSION} libnvonnxparsers-dev=${TENSORRT_VERSION} \
         libnvparsers8=${TENSORRT_VERSION}  libnvparsers-dev=${TENSORRT_VERSION} \
-        libnvinfer-headers-dev=${TENSORRT_VERSION} libnvinfer-headers-plugin-dev=${TENSORRT_VERSION} && \
+        libnvinfer-headers-dev=${TENSORRT_VERSION} libnvinfer-headers-plugin-dev=${TENSORRT_VERSION} \
+        libnvinfer-bin=${TENSORRT_VERSION} libnvinfer-dispatch-dev=${TENSORRT_VERSION} \
+        libnvinfer-dispatch8=${TENSORRT_VERSION} libnvinfer-lean-dev=${TENSORRT_VERSION} \
+        libnvinfer-lean8=${TENSORRT_VERSION} libnvinfer-samples=${TENSORRT_VERSION} \
+        libnvinfer-vc-plugin-dev=${TENSORRT_VERSION} libnvinfer-vc-plugin8=${TENSORRT_VERSION} \
+        tensorrt=${TENSORRT_VERSION} && \
+    pip${PYTHON_VERSION} install tensorrt && \
+    pip${PYTHON_VERSION} install onnxruntime-gpu==${ONNXRUNTIME_VERSION} && \
+    # DIR=/tmp/onnxruntime && \
+    # mkdir -p ${DIR} && \
+    # cd ${DIR} && \
+    # git clone --recursive --branch v${ONNXRUNTIME_VERSION} https://github.com/Microsoft/onnxruntime . && \
+    # export CUDACXX=/usr/local/cuda-${CUDA_VERSION}/bin/nvcc && \
+    # git config --add safe.directory ${DIR} && \
+    # bash build.sh --config Release  --build_shared_lib --parallel \
+    #     --use_cuda --cuda_version "${CUDA_VERSION}" \
+    #     --cuda_home /usr/local/cuda-${CUDA_VERSION} \
+    #     --cudnn_home /usr/include/ \
+    #     --build_wheel --skip_tests \
+    #     --use_tensorrt --tensorrt_home /usr/src/tensorrt/ \
+    #     --cmake_extra_defines "onnxruntime_BUILD_UNIT_TESTS=OFF" \
+    #     --cmake_extra_defines "CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}" \
+    #     --allow_running_as_root && \
+    # pip${PYTHON_VERSION} install build/Linux/Release/dist/onnxruntime_gpu-*.whl && \
+    # rm -rf ${DIR} && \
+    # cd /tmp/ && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
