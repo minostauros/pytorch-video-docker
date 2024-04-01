@@ -132,7 +132,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     git clone --recursive --branch v${ONNXRUNTIME_VERSION} https://github.com/Microsoft/onnxruntime . && \
     export CUDACXX=/usr/local/cuda-${CUDA_VERSION}/bin/nvcc && \
     git config --add safe.directory ${DIR} && \
-    bash build.sh --config Release  --build_shared_lib --parallel \
+    bash build.sh --config Release  --build_shared_lib \
         --use_cuda --cuda_version "${CUDA_VERSION}" \
         --cuda_home /usr/local/cuda-${CUDA_VERSION} \
         --cudnn_home /usr/include/ \
