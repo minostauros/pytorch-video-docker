@@ -107,7 +107,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
-        onnx onnxsim peft && \
+        onnx onnxsim peft loralib && \
 # attention accelerations
     pip${PYTHON_VERSION} install flash-attn --no-build-isolation && \
 # TensorRT libraries & onnxruntime with tensorrt

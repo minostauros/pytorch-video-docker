@@ -108,7 +108,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
-        onnx onnxsim peft && \
+        onnx onnxsim peft loralib && \
 # attention accelerations
     pip${PYTHON_VERSION} install flash-attn --no-build-isolation && \
     pip${PYTHON_VERSION} install xformers==${XFORMERS_VERSION} --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
@@ -125,25 +125,25 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         libnvinfer-vc-plugin-dev=${TENSORRT_VERSION} libnvinfer-vc-plugin8=${TENSORRT_VERSION} \
         tensorrt=${TENSORRT_VERSION} && \
     pip${PYTHON_VERSION} install tensorrt && \
-    pip${PYTHON_VERSION} install onnxruntime-gpu==${ONNXRUNTIME_VERSION} --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/ && \
-    # DIR=/tmp/onnxruntime && \
-    # mkdir -p ${DIR} && \
-    # cd ${DIR} && \
-    # git clone --recursive --branch v${ONNXRUNTIME_VERSION} https://github.com/Microsoft/onnxruntime . && \
-    # export CUDACXX=/usr/local/cuda-${CUDA_VERSION}/bin/nvcc && \
-    # git config --add safe.directory ${DIR} && \
-    # bash build.sh --config Release  --build_shared_lib --parallel \
-    #     --use_cuda --cuda_version "${CUDA_VERSION}" \
-    #     --cuda_home /usr/local/cuda-${CUDA_VERSION} \
-    #     --cudnn_home /usr/include/ \
-    #     --build_wheel --skip_tests \
-    #     --use_tensorrt --tensorrt_home /usr/src/tensorrt/ \
-    #     --cmake_extra_defines "onnxruntime_BUILD_UNIT_TESTS=OFF" \
-    #     --cmake_extra_defines "CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}" \
-    #     --allow_running_as_root && \
-    # pip${PYTHON_VERSION} install build/Linux/Release/dist/onnxruntime_gpu-*.whl && \
-    # rm -rf ${DIR} && \
-    # cd /tmp/ && \
+    # pip${PYTHON_VERSION} install onnxruntime-gpu==${ONNXRUNTIME_VERSION} --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/ && \
+    DIR=/tmp/onnxruntime && \
+    mkdir -p ${DIR} && \
+    cd ${DIR} && \
+    git clone --recursive --branch v${ONNXRUNTIME_VERSION} https://github.com/Microsoft/onnxruntime . && \
+    export CUDACXX=/usr/local/cuda-${CUDA_VERSION}/bin/nvcc && \
+    git config --add safe.directory ${DIR} && \
+    bash build.sh --config Release  --build_shared_lib --parallel \
+        --use_cuda --cuda_version "${CUDA_VERSION}" \
+        --cuda_home /usr/local/cuda-${CUDA_VERSION} \
+        --cudnn_home /usr/include/ \
+        --build_wheel --skip_tests \
+        --use_tensorrt --tensorrt_home /usr/src/tensorrt/ \
+        --cmake_extra_defines "onnxruntime_BUILD_UNIT_TESTS=OFF" \
+        --cmake_extra_defines "CMAKE_CUDA_ARCHITECTURES=${CMAKE_CUDA_ARCHITECTURES}" \
+        --allow_running_as_root && \
+    pip${PYTHON_VERSION} install build/Linux/Release/dist/onnxruntime_gpu-*.whl && \
+    rm -rf ${DIR} && \
+    cd /tmp/ && \
 # remove futile apt packages and pip cache
    apt-get -y remove \
         libncurses5-dev \
