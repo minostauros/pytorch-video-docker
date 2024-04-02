@@ -20,7 +20,7 @@ ARG TARGET_CUDA_VERSION=cu121
 ARG CUDA_VERSION=12.1
 # TensorRT for cuda12.0 supports cuda12.x
 ARG TENSORRT_VERSION="8.6.1.6-1+cuda12.0"
-ARG ONNXRUNTIME_VERSION=1.17.1
+# ARG ONNXRUNTIME_VERSION=1.17.1
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -129,7 +129,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     DIR=/tmp/onnxruntime && \
     mkdir -p ${DIR} && \
     cd ${DIR} && \
-    git clone --recursive --branch v${ONNXRUNTIME_VERSION} https://github.com/Microsoft/onnxruntime . && \
+    # git clone --recursive --branch v${ONNXRUNTIME_VERSION} https://github.com/Microsoft/onnxruntime . && \
+    git clone --recursive https://github.com/Microsoft/onnxruntime . && \
     export CUDACXX=/usr/local/cuda-${CUDA_VERSION}/bin/nvcc && \
     git config --add safe.directory ${DIR} && \
     bash build.sh --config Release  --build_shared_lib \
