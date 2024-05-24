@@ -9,7 +9,7 @@
 
 # Associated pytorch version will not be set automatically. Scroll down and set appropriate versions.
 
-FROM    ghcr.io/minostauros/cuda-ffmpeg-opencv-docker:4.9.0-cu118-py310
+FROM    ghcr.io/minostauros/cuda-ffmpeg-opencv-docker:4.7.0-cu118-py310
 
 ARG PYTHON_VERSION=3.10
 ARG PYTORCH_VERSION=2.2.1
@@ -20,7 +20,7 @@ ARG TARGET_CUDA_VERSION=cu118
 ARG CUDA_VERSION=11.8
 # TensorRT for cuda11.8 supports cuda11.x
 ARG TENSORRT_VERSION="8.6.1.6-1+cuda11.8"
-ARG ONNXRUNTIME_VERSION=1.15.1
+ARG ONNXRUNTIME_VERSION=1.18.0
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -75,6 +75,8 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo && \
     pip${PYTHON_VERSION} install timm decord simplejson av psutil fire fairscale ftfy && \
 # nvidia apex
+# setuptools==69.5.1 for https://github.com/aws-neuron/aws-neuron-sdk/issues/893
+    pip${PYTHON_VERSION} install setuptools==69.5.1 && \
     DIR=/tmp/apex && \
     mkdir -p ${DIR} && \
     cd ${DIR} && \
