@@ -20,6 +20,7 @@ ARG TARGET_CUDA_VERSION=cu118
 ARG CUDA_VERSION=11.8
 # TensorRT for cuda11.8 supports cuda11.x
 ARG TENSORRT_VERSION="8.6.1.6-1+cuda11.8"
+ARG PIP_TENSORRT=tensorrt-cu11
 ARG ONNXRUNTIME_VERSION=1.18.0
 
 # environmental variable for apex
@@ -67,13 +68,15 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # PyTorch (Mind cuda version and associated torch and torchvision versions)
     python${PYTHON_VERSION} -m pip install --upgrade pip && \
     pip${PYTHON_VERSION} install torch==${PYTORCH_VERSION}+${TARGET_CUDA_VERSION} torchvision==${TORCHVISION_VERSION}+${TARGET_CUDA_VERSION} torchaudio==${TORCHAUDIO_VERSION}+${TARGET_CUDA_VERSION} --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
+# CuDNN version mismatch betwen opencv and torch: https://discuss.pytorch.org/t/compiling-opencv-with-cuda-11-8-breaks-pytorch-convolution/203470
+    pip uninstall -y nvidia-cudnn-cu11 && \
 # CMake higher version than apt-get
     pip${PYTHON_VERSION} install cmake packaging && \
 # python packages for running FlowNet2.0 and install tensorboard
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo && \
-    pip${PYTHON_VERSION} install timm decord simplejson av psutil fire fairscale ftfy && \
+    pip${PYTHON_VERSION} install timm decord ffmpeg-python simplejson av psutil fire fairscale ftfy loguru uvicorn fastapi && \
 # nvidia apex
 # setuptools==69.5.1 for https://github.com/aws-neuron/aws-neuron-sdk/issues/893
     pip${PYTHON_VERSION} install setuptools==69.5.1 && \
@@ -126,7 +129,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         libnvinfer-lean8=${TENSORRT_VERSION} libnvinfer-samples=${TENSORRT_VERSION} \
         libnvinfer-vc-plugin-dev=${TENSORRT_VERSION} libnvinfer-vc-plugin8=${TENSORRT_VERSION} \
         tensorrt=${TENSORRT_VERSION} && \
-    pip${PYTHON_VERSION} install tensorrt && \
+    pip${PYTHON_VERSION} install ${PIP_TENSORRT} && \
     pip${PYTHON_VERSION} install onnxruntime-gpu==${ONNXRUNTIME_VERSION} && \
     # DIR=/tmp/onnxruntime && \
     # mkdir -p ${DIR} && \

@@ -20,6 +20,7 @@ ARG TARGET_CUDA_VERSION=cu121
 ARG CUDA_VERSION=12.1
 # TensorRT for cuda12.0 supports cuda12.x
 ARG TENSORRT_VERSION="8.6.1.6-1+cuda12.0"
+ARG PIP_TENSORRT=tensorrt-cu12
 ARG ONNXRUNTIME_VERSION=1.18.0
 
 # environmental variable for apex
@@ -73,7 +74,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo && \
-    pip${PYTHON_VERSION} install timm decord simplejson av psutil fire fairscale ftfy && \
+    pip${PYTHON_VERSION} install timm decord ffmpeg-python simplejson av psutil fire fairscale ftfy loguru uvicorn fastapi && \
 # nvidia apex
     DIR=/tmp/apex && \
     mkdir -p ${DIR} && \
@@ -124,7 +125,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         libnvinfer-lean8=${TENSORRT_VERSION} libnvinfer-samples=${TENSORRT_VERSION} \
         libnvinfer-vc-plugin-dev=${TENSORRT_VERSION} libnvinfer-vc-plugin8=${TENSORRT_VERSION} \
         tensorrt=${TENSORRT_VERSION} && \
-    pip${PYTHON_VERSION} install tensorrt && \
+    pip${PYTHON_VERSION} install ${PIP_TENSORRT} && \
     pip${PYTHON_VERSION} install onnxruntime-gpu==${ONNXRUNTIME_VERSION} --extra-index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple/ && \
     # DIR=/tmp/onnxruntime && \
     # mkdir -p ${DIR} && \
