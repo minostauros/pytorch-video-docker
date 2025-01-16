@@ -107,7 +107,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Neural Rendering related
     pip${PYTHON_VERSION} install configargparse lpips && \
 # VLMEvalKit
-    pip${PYTHON_VERSION} install sentencepiece validators python-dotenv sty && \
+    pip${PYTHON_VERSION} install sentencepiece validators python-dotenv sty xlsxwriter && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
