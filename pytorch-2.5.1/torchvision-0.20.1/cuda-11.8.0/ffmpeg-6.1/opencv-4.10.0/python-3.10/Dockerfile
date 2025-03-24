@@ -54,6 +54,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
         git-lfs \
         ninja-build \
         rclone \
+        iputils-ping \
         libdrm-dev libsystemd-dev \
         python${PYTHON_VERSION}-dev && \
         apt-get clean -y && \
@@ -75,7 +76,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # python packages for running FlowNet2.0 and install tensorboard
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
-    pip${PYTHON_VERSION} install virtualenv h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow einops torchinfo qdrant-client chromadb && \
+    pip${PYTHON_VERSION} install virtualenv h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow pillow-heif einops torchinfo qdrant-client chromadb && \
     pip${PYTHON_VERSION} install timm decord ffmpeg-python simplejson av psutil fire fairscale ftfy loguru uvicorn fastapi backoff wandb ipympl jupyter && \
 # nvidia apex
 # setuptools==69.5.1 for https://github.com/aws-neuron/aws-neuron-sdk/issues/893
@@ -115,7 +116,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
-        onnx onnxsim peft loralib sentence-transformers && \
+        onnx onnxsim peft loralib sentence-transformers vllm && \
 # attention accelerations
     # for CUDA 11.8, highest flash-attn version is 2.7.3
     pip${PYTHON_VERSION} install flash-attn==2.7.3 --no-build-isolation && \
