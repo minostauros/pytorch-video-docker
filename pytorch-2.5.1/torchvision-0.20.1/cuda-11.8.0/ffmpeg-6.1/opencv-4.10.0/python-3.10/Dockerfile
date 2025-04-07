@@ -116,7 +116,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
 # Huggingface (pytorch >= 1.13.0 for bettertransformer)
     pip${PYTHON_VERSION} install transformers tokenizers datasets accelerate \
         optimum huggingface_hub huggingface_hub[cli,torch] diffusers[torch] \
-        onnx onnxsim peft loralib sentence-transformers vllm && \
+        onnx onnxsim peft loralib sentence-transformers && \
 # attention accelerations
     # for CUDA 11.8, highest flash-attn version is 2.7.3
     pip${PYTHON_VERSION} install flash-attn==2.7.3 --no-build-isolation && \
