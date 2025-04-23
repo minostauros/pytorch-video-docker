@@ -21,7 +21,7 @@ ARG CUDA_VERSION=11.8
 # TensorRT for cuda11.8 supports cuda11.x
 ARG TENSORRT_VERSION="8.6.1.6-1+cuda11.8"
 ARG PIP_TENSORRT=tensorrt-cu11
-ARG ONNXRUNTIME_VERSION=1.20.1
+ARG ONNXRUNTIME_VERSION=1.21.1
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -77,7 +77,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install virtualenv h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow pillow-heif einops torchinfo qdrant-client chromadb && \
-    pip${PYTHON_VERSION} install timm decord ffmpeg-python simplejson av psutil fire fairscale ftfy loguru uvicorn fastapi backoff wandb ipympl jupyter && \
+    pip${PYTHON_VERSION} install timm decord ffmpeg-python simplejson av psutil fire fairscale ftfy loguru uvicorn fastapi backoff wandb ipympl jupyter aiofiles && \
 # nvidia apex
 # setuptools==69.5.1 for https://github.com/aws-neuron/aws-neuron-sdk/issues/893
     pip${PYTHON_VERSION} install setuptools==69.5.1 && \

@@ -21,7 +21,7 @@ ARG CUDA_VERSION=12.1
 # TensorRT for cuda12.0 supports cuda12.x
 ARG TENSORRT_VERSION="8.6.1.6-1+cuda12.0"
 ARG PIP_TENSORRT=tensorrt-cu12
-ARG ONNXRUNTIME_VERSION=1.20.1
+ARG ONNXRUNTIME_VERSION=1.21.1
 
 # environmental variable for apex
 # https://en.wikipedia.org/wiki/CUDA#GPUs_supported
@@ -75,7 +75,7 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install cffi tensorboardX tensorboard torch_tb_profiler tqdm scikit-image colorama==0.3.7 setproctitle pytz && \
 # python packages for minostauros
     pip${PYTHON_VERSION} install virtualenv h5py munkres scikit-learn visdom youtube_dl matplotlib nibabel pypng moviepy Pillow pillow-heif einops torchinfo qdrant-client chromadb && \
-    pip${PYTHON_VERSION} install timm decord ffmpeg-python simplejson av psutil fire fairscale ftfy loguru uvicorn fastapi backoff wandb ipympl jupyter && \
+    pip${PYTHON_VERSION} install timm decord ffmpeg-python simplejson av psutil fire fairscale ftfy loguru uvicorn fastapi backoff wandb ipympl jupyter aiofiles && \
 # nvidia apex
     DIR=/tmp/apex && \
     mkdir -p ${DIR} && \
