@@ -19,7 +19,7 @@ ARG XFORMERS_VERSION=0.0.29
 ARG TARGET_CUDA_VERSION=cu118
 ARG CUDA_VERSION=11.8
 # TensorRT for cuda11.8 supports cuda11.x
-ARG TENSORRT_VERSION="8.6.1.6-1+cuda11.8"
+ARG TENSORRT_VERSION="10.8.0.43-1+cuda11.8"
 ARG PIP_TENSORRT=tensorrt-cu11
 ARG ONNXRUNTIME_VERSION=1.21.1
 
@@ -122,16 +122,17 @@ RUN echo "Asia/Seoul" > /etc/timezone && \
     pip${PYTHON_VERSION} install flash-attn==2.7.3 --no-build-isolation && \
     pip${PYTHON_VERSION} install xformers==${XFORMERS_VERSION} --index-url https://download.pytorch.org/whl/${TARGET_CUDA_VERSION} && \
 # TensorRT libraries & onnxruntime with tensorrt
-    apt list -a libnvinfer8 && \
-    apt-get install -y libnvinfer8=${TENSORRT_VERSION} libnvinfer-plugin8=${TENSORRT_VERSION} \
+    apt list -a libnvinfer10 && \
+    apt-get install -y libnvinfer10=${TENSORRT_VERSION} libnvinfer-plugin10=${TENSORRT_VERSION} \
         libnvinfer-dev=${TENSORRT_VERSION} libnvinfer-plugin-dev=${TENSORRT_VERSION} \
-        libnvonnxparsers8=${TENSORRT_VERSION} libnvonnxparsers-dev=${TENSORRT_VERSION} \
-        libnvparsers8=${TENSORRT_VERSION}  libnvparsers-dev=${TENSORRT_VERSION} \
+        libnvonnxparsers10=${TENSORRT_VERSION} libnvonnxparsers-dev=${TENSORRT_VERSION} \
         libnvinfer-headers-dev=${TENSORRT_VERSION} libnvinfer-headers-plugin-dev=${TENSORRT_VERSION} \
         libnvinfer-bin=${TENSORRT_VERSION} libnvinfer-dispatch-dev=${TENSORRT_VERSION} \
-        libnvinfer-dispatch8=${TENSORRT_VERSION} libnvinfer-lean-dev=${TENSORRT_VERSION} \
-        libnvinfer-lean8=${TENSORRT_VERSION} libnvinfer-samples=${TENSORRT_VERSION} \
-        libnvinfer-vc-plugin-dev=${TENSORRT_VERSION} libnvinfer-vc-plugin8=${TENSORRT_VERSION} \
+        libnvinfer-dispatch10=${TENSORRT_VERSION} libnvinfer-lean-dev=${TENSORRT_VERSION} \
+        libnvinfer-lean10=${TENSORRT_VERSION} libnvinfer-samples=${TENSORRT_VERSION} \
+        libnvinfer-vc-plugin-dev=${TENSORRT_VERSION} libnvinfer-vc-plugin10=${TENSORRT_VERSION} \
+        python3-libnvinfer=${TENSORRT_VERSION} python3-libnvinfer-lean=${TENSORRT_VERSION} \
+        python3-libnvinfer-dispatch=${TENSORRT_VERSION} python3-libnvinfer-dev=${TENSORRT_VERSION} \
         tensorrt=${TENSORRT_VERSION} && \
     pip${PYTHON_VERSION} install ${PIP_TENSORRT} && \
     # onnxrumtime-gpu versions: https://aiinfra.visualstudio.com/PublicPackages/_artifacts/feed/onnxruntime-cuda-11/PyPI/onnxruntime-gpu/versions/
